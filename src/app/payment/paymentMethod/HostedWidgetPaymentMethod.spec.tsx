@@ -2,7 +2,7 @@ import { createCheckoutService, BankInstrument, CheckoutSelectors, CheckoutServi
 import { mount, ReactWrapper } from 'enzyme';
 import { Formik } from 'formik';
 import { noop } from 'lodash';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, ReactElement } from 'react';
 
 import { getCart } from '../../cart/carts.mock';
 import { CheckoutProvider } from '../../checkout';
@@ -181,6 +181,57 @@ describe('HostedWidgetPaymentMethod', () => {
         component.setProps({ shouldShow: false });
 
         expect(component.isEmptyRender()).toBe(true);
+    });
+
+    it('renders custom payment method component', () => {
+        const MockComponent = (): ReactElement => {
+            return <div id="custom-form-id" />;
+        };
+
+        defaultProps = {
+            ...defaultProps,
+            method : { ...getPaymentMethod(),
+            id: 'card' },
+            shouldRenderCustomInstrument : true,
+            validateCustomRender: () => <MockComponent />,
+        };
+
+        const component = mount(<HostedWidgetPaymentMethodTest { ...defaultProps } />);
+
+        expect(component.find('[id="custom-form-id"]')).toHaveLength(1);
+    });
+
+    it('does execute validateCustomRender', () => {
+        defaultProps = {
+            ...defaultProps,
+            method : { ...getPaymentMethod(),
+            id: 'card' },
+            shouldRenderCustomInstrument : true,
+            validateCustomRender: jest.fn(),
+        };
+
+        mount(<HostedWidgetPaymentMethodTest { ...defaultProps } />);
+
+        expect(defaultProps.validateCustomRender).toHaveBeenCalled();
+    });
+
+    it('does not render custom payment method component', () => {
+        const MockComponent = (): ReactElement => {
+            return <div id="custom-form-id" />;
+        };
+
+        defaultProps = {
+            ...defaultProps,
+            method : { ...getPaymentMethod(),
+            id: 'card' },
+            shouldRenderCustomInstrument : false,
+            validateCustomRender: () => <MockComponent />,
+        };
+
+        const component = mount(<HostedWidgetPaymentMethodTest { ...defaultProps } />);
+
+        expect(component.find('[id="custom-form-id"]')).toHaveLength(0);
+
     });
 
     describe('when user is signed into their payment method account', () => {
