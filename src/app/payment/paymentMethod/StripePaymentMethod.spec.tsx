@@ -55,7 +55,15 @@ describe('when using Stripe payment', () => {
 
     describe('when using alipay component', () => {
         beforeEach(() => {
-            method = { ...getPaymentMethod(), id: 'alipay', gateway: 'stripev3', method: 'alipay', initializationData: { shouldUseIndividualCardFields: false } };
+            method = {
+                ...getPaymentMethod(),
+                id: 'alipay',
+                gateway: 'stripev3',
+                method: 'alipay',
+                initializationData: {
+                    shouldUseIndividualCardFields: false,
+                },
+            };
         });
 
         it('renders as hosted widget method', () => {
@@ -92,7 +100,15 @@ describe('when using Stripe payment', () => {
 
     describe('when using card component', () => {
         beforeEach(() => {
-            method = { ...getPaymentMethod(), id: 'card', gateway: 'stripev3', method: 'card', initializationData: { useIndividualCardFields: false } };
+            method = {
+                ...getPaymentMethod(),
+                id: 'card',
+                gateway: 'stripev3',
+                method: 'card',
+                initializationData: {
+                    useIndividualCardFields: false,
+                },
+            };
         });
 
         it('renders as hosted widget method', () => {
@@ -122,12 +138,12 @@ describe('when using Stripe payment', () => {
                 .toHaveBeenCalledWith(expect.objectContaining({
                     methodId: method.id,
                     stripev3: {
-                        containerId: 'stripe-card-component-field',
                         options: {
                             classes: {
                                 base: 'form-input optimizedCheckout-form-input',
                             },
                         },
+                        containerId: 'stripe-card-component-field',
                     },
                 }));
         });
@@ -150,25 +166,25 @@ describe('when using Stripe payment', () => {
                         containerId: 'stripe-card-component-field',
                         options: {
                             cardNumberElementOptions: {
-                                containerId: 'stripe-card-number-component-field',
                                 showIcon: true,
                                 classes: {
                                     base: 'form-input optimizedCheckout-form-input',
                                 },
                                 placeholder: '',
+                                containerId: 'stripe-card-number-component-field',
                             },
                             cardExpiryElementOptions: {
-                                containerId: 'stripe-expiry-component-field',
                                 classes: {
                                     base: 'form-input optimizedCheckout-form-input',
                                 },
+                                containerId: 'stripe-expiry-component-field',
                             },
                             cardCvcElementOptions: {
-                                containerId: 'stripe-cvc-component-field',
                                 classes: {
                                     base: 'form-input optimizedCheckout-form-input',
                                 },
                                 placeholder: '',
+                                containerId: 'stripe-cvc-component-field',
                             },
                             zipCodeElementOptions: {
                                 containerId: 'stripe-postal-code-component-field',
@@ -181,7 +197,15 @@ describe('when using Stripe payment', () => {
 
     describe('when using ideal component', () => {
         beforeEach(() => {
-            method = { ...getPaymentMethod(), id: 'idealBank', gateway: 'stripev3', method: 'idealBank', initializationData: { shouldUseIndividualCardFields: false } };
+            method = {
+                ...getPaymentMethod(),
+                id: 'idealBank',
+                gateway: 'stripev3',
+                method: 'idealBank',
+                initializationData: {
+                    shouldUseIndividualCardFields: false,
+                },
+            };
         });
 
         it('renders as hosted widget method', () => {
@@ -225,7 +249,15 @@ describe('when using Stripe payment', () => {
 
     describe('when using iban component', () => {
         beforeEach(() => {
-            method = { ...getPaymentMethod(), id: 'iban', gateway: 'stripev3', method: 'iban', initializationData: { shouldUseIndividualCardFields: false } };
+            method = {
+                ...getPaymentMethod(),
+                id: 'iban',
+                gateway: 'stripev3',
+                method: 'iban',
+                initializationData: {
+                    shouldUseIndividualCardFields: false,
+                },
+            };
         });
 
         it('renders as hosted widget method', () => {
@@ -255,20 +287,20 @@ describe('when using Stripe payment', () => {
                 .toHaveBeenCalledWith(expect.objectContaining({
                     methodId: method.id,
                     stripev3: {
-                        containerId: 'stripe-iban-component-field',
                         options: {
                             classes: {
                                 base: 'form-input optimizedCheckout-form-input',
                             },
                             supportedCountries: ['SEPA'],
                         },
+                        containerId: 'stripe-iban-component-field',
                     },
                 }));
         });
 
         it('returns storeUrl null if getConfig is undefined ', () => {
             jest.spyOn(checkoutState.data, 'getConfig')
-            .mockReturnValue(undefined);
+                .mockReturnValue(undefined);
             const container = mount(<PaymentMethodTest { ...defaultProps } method={ method } />);
 
             expect(container.prop('storeUrl')).toBe(undefined);

@@ -35,7 +35,7 @@ export interface HostedWidgetPaymentMethodProps {
     shouldShowDescriptor?: boolean;
     shouldShowEditButton?: boolean;
     shouldRenderCustomInstrument?: boolean;
-    validateCustomRender?(): React.ReactNode;
+    renderCustomPaymentForm?(): React.ReactNode;
     validateInstrument?(shouldShowNumberField: boolean): React.ReactNode;
     deinitializeCustomer?(options: CustomerRequestOptions): Promise<CheckoutSelectors>;
     deinitializePayment(options: PaymentRequestOptions): Promise<CheckoutSelectors>;
@@ -92,7 +92,8 @@ class HostedWidgetPaymentMethod extends Component<
         }
     }
 
-    async componentDidUpdate(prevProps: Readonly<HostedWidgetPaymentMethodProps & WithCheckoutHostedWidgetPaymentMethodProps>, prevState: Readonly<HostedWidgetPaymentMethodState>): Promise<void> {
+    async componentDidUpdate(prevProps: Readonly<HostedWidgetPaymentMethodProps & WithCheckoutHostedWidgetPaymentMethodProps>,
+                             prevState: Readonly<HostedWidgetPaymentMethodState>): Promise<void> {
         const {
             deinitializePayment = noop,
             instruments,
@@ -250,7 +251,7 @@ class HostedWidgetPaymentMethod extends Component<
         );
     }
 
-    renderContainer(shouldShowCreditCardFieldset: any): ReactNode | undefined {
+    renderContainer(shouldShowCreditCardFieldset: any): ReactNode {
         const {
             containerId,
             hideContentWhenSignedOut = false,
@@ -260,10 +261,12 @@ class HostedWidgetPaymentMethod extends Component<
             method,
             additionalContainerClassName,
             shouldRenderCustomInstrument = false,
-            validateCustomRender,
+            renderCustomPaymentForm,
         } = this.props;
 
-        const customContainer = shouldRenderCustomInstrument && validateCustomRender && validateCustomRender();
+        if ((hideContentWhenSignedOut && isSignInRequired && !isSignedIn) || !shouldShowCreditCardFieldset || hideWidget) {
+            return null;
+        }
 
         return (
             <div
@@ -271,15 +274,12 @@ class HostedWidgetPaymentMethod extends Component<
                     'widget',
                     `widget--${method.id}`,
                     'payment-widget',
-                    shouldRenderCustomInstrument  ? '' : additionalContainerClassName
+                    shouldRenderCustomInstrument ? '' : additionalContainerClassName
                 ) }
                 id={ containerId }
-                style={ {
-                    display: (hideContentWhenSignedOut && isSignInRequired && !isSignedIn) || !shouldShowCreditCardFieldset || hideWidget ? 'none' : undefined,
-                } }
                 tabIndex={ -1 }
             >
-                { customContainer }
+                { shouldRenderCustomInstrument && renderCustomPaymentForm && renderCustomPaymentForm() }
             </div>
         );
     }

@@ -3,7 +3,7 @@ import React, { useCallback, FunctionComponent } from 'react';
 import { Omit } from 'utility-types';
 
 import { withCheckout, CheckoutContextProps } from '../../checkout';
-import {  TranslatedString } from '../../locale';
+import { TranslatedString } from '../../locale';
 
 import HostedWidgetPaymentMethod, { HostedWidgetPaymentMethodProps } from './HostedWidgetPaymentMethod';
 import StripeV3CustomCardForm from './StripeV3CustomCardForm';
@@ -61,7 +61,7 @@ const StripePaymentMethod: FunctionComponent<StripePaymentMethodProps & WithChec
             placeholder: '',
         },
         [StripeElementType.iban]: {
-            ...{ classes },
+            classes,
             supportedCountries: ['SEPA'],
         },
         [StripeElementType.idealBank]: {
@@ -71,10 +71,21 @@ const StripePaymentMethod: FunctionComponent<StripePaymentMethodProps & WithChec
 
     const getIndividualCardElementOptions = useCallback((stripeInitializeOptions: StripeOptions) => {
         return {
-            cardNumberElementOptions: { containerId: 'stripe-card-number-component-field', ...stripeInitializeOptions[StripeElementType.cardNumber] },
-            cardExpiryElementOptions: { containerId: 'stripe-expiry-component-field', ...stripeInitializeOptions[StripeElementType.cardExpiry] },
-            cardCvcElementOptions: { containerId: 'stripe-cvc-component-field', ...stripeInitializeOptions[StripeElementType.cardCvc] },
-            zipCodeElementOptions: { containerId: 'stripe-postal-code-component-field' },
+            cardNumberElementOptions: {
+                ...stripeInitializeOptions[StripeElementType.cardNumber],
+                containerId: 'stripe-card-number-component-field',
+            },
+            cardExpiryElementOptions: {
+                ...stripeInitializeOptions[StripeElementType.cardExpiry],
+                containerId: 'stripe-expiry-component-field',
+            },
+            cardCvcElementOptions: {
+                ...stripeInitializeOptions[StripeElementType.cardCvc],
+                containerId: 'stripe-cvc-component-field',
+            },
+            zipCodeElementOptions: {
+                containerId: 'stripe-postal-code-component-field',
+            },
         };
     }, []);
 
@@ -94,7 +105,7 @@ const StripePaymentMethod: FunctionComponent<StripePaymentMethodProps & WithChec
         });
     }, [initializePayment, containerId, getStripeOptions, useIndividualCardFields, stripeOptions]);
 
-    const renderCustomCardForm = () => {
+    const renderCustomPaymentForm = () => {
         const optionsCustomForm = getIndividualCardElementOptions(stripeOptions);
 
         return <StripeV3CustomCardForm options={ optionsCustomForm } />;
@@ -108,8 +119,8 @@ const StripePaymentMethod: FunctionComponent<StripePaymentMethodProps & WithChec
             hideContentWhenSignedOut
             initializePayment={ initializeStripePayment }
             method={ method }
+            renderCustomPaymentForm={ renderCustomPaymentForm }
             shouldRenderCustomInstrument={ useIndividualCardFields }
-            validateCustomRender={ renderCustomCardForm }
         />
         {
             method.id === 'iban' &&

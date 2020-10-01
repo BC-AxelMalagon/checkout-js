@@ -190,10 +190,12 @@ describe('HostedWidgetPaymentMethod', () => {
 
         defaultProps = {
             ...defaultProps,
-            method : { ...getPaymentMethod(),
-            id: 'card' },
-            shouldRenderCustomInstrument : true,
-            validateCustomRender: () => <MockComponent />,
+            method : {
+                ...getPaymentMethod(),
+                id: 'card',
+            },
+            renderCustomPaymentForm: () => <MockComponent />,
+            shouldRenderCustomInstrument: true,
         };
 
         const component = mount(<HostedWidgetPaymentMethodTest { ...defaultProps } />);
@@ -204,15 +206,17 @@ describe('HostedWidgetPaymentMethod', () => {
     it('does execute validateCustomRender', () => {
         defaultProps = {
             ...defaultProps,
-            method : { ...getPaymentMethod(),
-            id: 'card' },
+            method : {
+                ...getPaymentMethod(),
+                id: 'card',
+            },
+            renderCustomPaymentForm: jest.fn(),
             shouldRenderCustomInstrument : true,
-            validateCustomRender: jest.fn(),
         };
 
         mount(<HostedWidgetPaymentMethodTest { ...defaultProps } />);
 
-        expect(defaultProps.validateCustomRender).toHaveBeenCalled();
+        expect(defaultProps.renderCustomPaymentForm).toHaveBeenCalled();
     });
 
     it('does not render custom payment method component', () => {
@@ -222,10 +226,13 @@ describe('HostedWidgetPaymentMethod', () => {
 
         defaultProps = {
             ...defaultProps,
-            method : { ...getPaymentMethod(),
-            id: 'card' },
+            method : {
+                ...getPaymentMethod(),
+                id: 'card',
+            },
+
+            renderCustomPaymentForm: () => <MockComponent />,
             shouldRenderCustomInstrument : false,
-            validateCustomRender: () => <MockComponent />,
         };
 
         const component = mount(<HostedWidgetPaymentMethodTest { ...defaultProps } />);
