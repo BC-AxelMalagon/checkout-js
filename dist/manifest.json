@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "appVersion": "1.106.1-alpha.1609780228720",
+  "appVersion": "1.106.1-alpha.1609784946726",
   "dynamicChunks": {
     "css": [
       "billing-12c84576.css",
@@ -10,21 +10,19 @@
       "shipping-d3b7acff.css"
     ],
     "js": [
-      "billing-2e8c561b.js",
-      "cart-summary-drawer-5f933894.js",
-      "cart-summary-4dd2d245.js",
-      "cart-summary~cart-summary-drawer-ba8dcf1e.js",
-      "customer-694cd4ef.js",
-      "order-summary-drawer-63374a3d.js",
-      "order-summary-cbd7467a.js",
-      "payment-7af7dff5.js",
-      "shipping-092b3f5a.js",
-      "transients~billing~shipping-0a367610.js",
-      "vendors~billing~customer~payment~shipping-35d2a2db.js",
-      "vendors~billing~customer~shipping-10032683.js",
-      "vendors~billing~payment~shipping-6892e875.js",
-      "vendors~billing~shipping-8b022086.js",
-      "vendors~payment-033fb27b.js"
+      "billing-eb0e7487.js",
+      "cart-summary-drawer-221b2519.js",
+      "cart-summary-13f2743d.js",
+      "cart-summary~cart-summary-drawer-afd54c1b.js",
+      "customer-f83966fa.js",
+      "order-summary-drawer-6c48e6dc.js",
+      "order-summary-ee8a876c.js",
+      "payment-e7f9c6fa.js",
+      "shipping-3b58f31f.js",
+      "vendors~billing~customer~payment~shipping-1808b1a9.js",
+      "vendors~billing~customer~shipping-b9cd774f.js",
+      "vendors~billing~payment~shipping-4fbea155.js",
+      "vendors~billing~shipping-353b7d8a.js"
     ],
     "svg": [
       "static/card-abef8595.svg"
@@ -34,14 +32,14 @@
     ]
   },
   "js": [
-    "runtime-cbbdb532.js",
-    "polyfill~checkout-af72ea56.js",
-    "transients~checkout-0f55c049.js",
-    "sentry~checkout-2de7ea30.js",
-    "vendors~checkout-9736c07b.js",
-    "checkout-a16c21b4.js"
+    "runtime-bce81bed.js",
+    "polyfill~checkout-50a5d68c.js",
+    "transients~checkout-3f37b0d7.js",
+    "sentry~checkout-a3981402.js",
+    "vendors~checkout-47659369.js",
+    "checkout-b12678c0.js"
   ],
   "css": [
-    "checkout-4718131c.css"
+    "checkout-f7e542a5.css"
   ]
 }
