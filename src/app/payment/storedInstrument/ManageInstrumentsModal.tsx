@@ -86,7 +86,7 @@ class ManageInstrumentsModal extends Component<ManageInstrumentsModalProps & Wit
         const accountInstruments = instruments.filter(isAccountInstrument);
 
         return (
-            accountInstruments.length
+            accountInstruments.length || bankInstruments.length
                 ? <ManageAccountInstrumentsTable
                     instruments={ [
                         ...bankInstruments,
