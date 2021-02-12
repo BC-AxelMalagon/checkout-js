@@ -24,7 +24,7 @@ const MasterpassPaymentMethod: FunctionComponent<MasterpassPaymentMethodProps & 
         <img
             alt={ language.translate('payment.masterpass_name_text') }
             id="mpbutton"
-            src="https://masterpass.com/dyn/img/btn/global/mp_chk_btn_126x030px.svg"
+            src="https://sandbox.src.mastercard.com/assets/img/btn/src_chk_btn_126x030px.svg?locale=en_us&paymentmethod=visa&checkoutid=b68e5ebe928a45bca331ac8317e20ea8"
         />
     ), [language]);
 
