@@ -15,8 +15,7 @@ import { LoadingOverlay } from '../../ui/loading';
 import { isBankAccountInstrument, isCardInstrument, isInstrumentCardCodeRequiredSelector,
     isInstrumentCardNumberRequiredSelector,
     isInstrumentFeatureAvailable,
-    CardInstrumentFieldset,
-    CreditCardValidation } from '../storedInstrument';
+    CardInstrumentFieldset } from '../storedInstrument';
 import withPayment, { WithPaymentProps } from '../withPayment';
 import { PaymentFormValues } from '../PaymentForm';
 
@@ -29,12 +28,12 @@ export interface HostedDropInPaymentMethodProps {
     shouldHideInstrumentExpiryDate?: boolean;
     hideVerificationFields?: boolean;
     isSignInRequired?: boolean;
-    validateInstrument?(shouldShowNumberField: boolean): React.ReactNode;
+    validateInstrument?(selectedInstrument?: CardInstrument): React.ReactNode;
     deinitializeCustomer?(options: CustomerRequestOptions): Promise<CheckoutSelectors>;
     deinitializePayment(options: PaymentRequestOptions): Promise<CheckoutSelectors>;
     onUnhandledError?(error: Error): void;
     initializeCustomer?(options: CustomerInitializeOptions): Promise<CheckoutSelectors>;
-    initializePayment(options: PaymentInitializeOptions, selectedInstrumentId?: string): Promise<CheckoutSelectors>;
+    initializePayment(options: PaymentInitializeOptions, selectedInstrument?: CardInstrument): Promise<CheckoutSelectors>;
     signInCustomer?(): void;
     onSignOut?(): void;
     onSignOutError?(error: Error): void;
@@ -217,31 +216,22 @@ class HostedDropInPaymentMethod extends Component<
         const {
             hideVerificationFields,
             instruments,
-            isInstrumentCardCodeRequired: isInstrumentCardCodeRequiredProp,
             isInstrumentCardNumberRequired: isInstrumentCardNumberRequiredProp,
-            method,
             validateInstrument,
         } = this.props;
 
         const { selectedInstrumentId = this.getDefaultInstrumentId() } = this.state;
-        const selectedInstrument = find(instruments, { bigpayToken: selectedInstrumentId });
-        const shouldShowNumberField = selectedInstrument ? isInstrumentCardNumberRequiredProp(selectedInstrument as CardInstrument) : false;
-        const shouldShowCardCodeField = selectedInstrument ? isInstrumentCardCodeRequiredProp(selectedInstrument as CardInstrument, method) : false;
+        const selectedInstrument = find(instruments, { bigpayToken: selectedInstrumentId }) as CardInstrument;
 
         if (hideVerificationFields) {
             return;
         }
 
         if (validateInstrument) {
-            return validateInstrument(shouldShowNumberField);
+            return validateInstrument(selectedInstrument);
         }
 
-        return (
-            <CreditCardValidation
-                shouldShowCardCodeField={ shouldShowCardCodeField }
-                shouldShowNumberField={ shouldShowNumberField }
-            />
-        );
+        return;
     }
 
     private async initializeMethod(): Promise<CheckoutSelectors | void> {
@@ -251,12 +241,15 @@ class HostedDropInPaymentMethod extends Component<
             isSignInRequired,
             initializeCustomer = noop,
             initializePayment = noop,
+            instruments,
             method,
             setSubmit,
             signInCustomer = noop,
         } = this.props;
 
         const { selectedInstrumentId = this.getDefaultInstrumentId() } = this.state;
+
+        const selectedInstrument = instruments.find(instrument => instrument.bigpayToken === selectedInstrumentId) || instruments[0];
 
         if (!isPaymentDataRequired) {
             setSubmit(method, null);
@@ -277,7 +270,7 @@ class HostedDropInPaymentMethod extends Component<
         return initializePayment({
             gatewayId: method.gateway,
             methodId: method.id,
-        }, selectedInstrumentId);
+        }, selectedInstrument);
     }
 
     private handleDeleteInstrument: (id: string) => void = id => {

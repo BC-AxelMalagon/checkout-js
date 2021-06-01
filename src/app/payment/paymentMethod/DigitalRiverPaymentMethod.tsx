@@ -1,5 +1,8 @@
+import { CardInstrument, PaymentInitializeOptions } from '@bigcommerce/checkout-sdk';
 import React, { useCallback, useContext, FunctionComponent } from 'react';
 import { Omit } from 'utility-types';
+
+import { withHostedCreditCardFieldset, WithInjectedHostedCreditCardFieldsetProps } from '../hostedCreditCard';
 
 import { connectFormik, ConnectFormikProps } from '../../common/form';
 import { FormContext } from '../../ui/form';
@@ -14,15 +17,17 @@ export enum DigitalRiverClasses {
     base =  'form-input optimizedCheckout-form-input',
 }
 
-const DigitalRiverPaymentMethod: FunctionComponent<DigitalRiverPaymentMethodProps> = ({
+const DigitalRiverPaymentMethod: FunctionComponent<DigitalRiverPaymentMethodProps & WithInjectedHostedCreditCardFieldsetProps> = ({
     initializePayment,
     onUnhandledError,
+    getHostedFormOptions,
+    getHostedStoredCardValidationFieldset,
     formik: { submitForm },
     ...rest
 }) => {
     const { setSubmitted } = useContext(FormContext);
     const containerId = `${rest.method}-component-field`;
-    const initializeDigitalRiverPayment = useCallback(options => initializePayment({
+    const initializeDigitalRiverPayment = useCallback( async (options: PaymentInitializeOptions, selectedInstrument) => initializePayment({
         ...options,
         digitalriver: {
             containerId,
@@ -51,6 +56,7 @@ const DigitalRiverPaymentMethod: FunctionComponent<DigitalRiverPaymentMethodProp
                     ],
                     classes: DigitalRiverClasses,
                 },
+                ...(selectedInstrument && !selectedInstrument?.trustedShippingAddress && { form : await getHostedFormOptions(selectedInstrument) }),
             },
             onSubmitForm: () => {
                 setSubmitted(true);
@@ -62,12 +68,20 @@ const DigitalRiverPaymentMethod: FunctionComponent<DigitalRiverPaymentMethodProp
         },
     }), [initializePayment, containerId, setSubmitted, submitForm, onUnhandledError]);
 
+    function validateInstrument(selectedInstrument: CardInstrument) {
+        if (selectedInstrument && selectedInstrument.trustedShippingAddress) {
+            return;
+        }
+
+        return getHostedStoredCardValidationFieldset(selectedInstrument);
+    }
+
     return <HostedDropInPaymentMethod
         { ...rest }
         containerId={ containerId }
-        hideVerificationFields
         initializePayment={ initializeDigitalRiverPayment }
+        validateInstrument={validateInstrument}
     />;
 };
 
-export default connectFormik(DigitalRiverPaymentMethod);
+export default connectFormik(withHostedCreditCardFieldset(DigitalRiverPaymentMethod));
